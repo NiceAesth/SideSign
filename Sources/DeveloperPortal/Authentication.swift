@@ -189,18 +189,18 @@ public extension DeveloperPortal {
         }
 
         verboseLog("[SideSign] Parse complete. dsid: \(dsid), token: \(idmsToken)")
-        
+
         // 2FA auth type
         let statusDictionary = completeResponseDictionary["Status"] as? [String: any Sendable]
         let authType = (statusDictionary?["au"] as? String)
            ?? (completeResponseDictionary["au"] as? String)
-           ?? ((statusDictionary?["hsc"] as? Int) == 409 && anisetteData.clientInfo.contains("<Android;") ? "pushedCode" : nil)
+           ?? ((statusDictionary?["hsc"] as? Int) == 409 ? "pushedCode" : nil)
         verboseLog("[SideSign] Authentication status type: \(authType ?? "nil")")
 
         let twoFactorAuthContext = TwoFactorAuthContext(
-            dsid: dsid, 
-            idmsToken: idmsToken, 
-            anisetteData: anisetteData, 
+            dsid: dsid,
+            idmsToken: idmsToken,
+            anisetteData: anisetteData,
             xcodeVersion: xcodeVersion
         )
 
@@ -731,9 +731,9 @@ public extension DeveloperPortal {
         let errorMsg = (responseDict?["em"] as? String)
                    ?? ((responseDict?["Status"] as? [String: any Sendable])?["em"] as? String)
 
-        if errorCode == GrandSlamAuthErrorCodes.tooManyAttempts 
-            || errorCode == GrandSlamAuthErrorCodes.tooManyCodesRequested 
-            || errorCode == GrandSlamAuthErrorCodes.rateLimited 
+        if errorCode == GrandSlamAuthErrorCodes.tooManyAttempts
+            || errorCode == GrandSlamAuthErrorCodes.tooManyCodesRequested
+            || errorCode == GrandSlamAuthErrorCodes.rateLimited
             || statusCode == HTTPStatusCodes.tooManyRequests
         {
             let msg = errorMsg ?? "Verification codes cannot be sent to this phone number at this time. Please try again later."
@@ -850,9 +850,9 @@ public extension DeveloperPortal {
                     ?? xmluiMessage
                     ?? xmluiTitle
 
-        if errorCode == GrandSlamAuthErrorCodes.tooManyAttempts 
-            || errorCode == GrandSlamAuthErrorCodes.tooManyCodesRequested 
-            || errorCode == GrandSlamAuthErrorCodes.rateLimited 
+        if errorCode == GrandSlamAuthErrorCodes.tooManyAttempts
+            || errorCode == GrandSlamAuthErrorCodes.tooManyCodesRequested
+            || errorCode == GrandSlamAuthErrorCodes.rateLimited
             || statusCode == HTTPStatusCodes.tooManyRequests
         {
             let msg = errorMsg ?? "Too many verification code attempts. Please try again later."
